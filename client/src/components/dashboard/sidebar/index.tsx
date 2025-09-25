@@ -31,7 +31,7 @@ import DotsVerticalIcon from "@/components/icons/dots-vertical";
 import { Bullet } from "@/components/ui/bullet";
 import LockIcon from "@/components/icons/lock";
 
-import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { useAptosWallet, shortenAddress } from "@/hooks/useAptosWallet";
 
 type DashboardSidebarProps = React.ComponentProps<typeof Sidebar> & {
   /**
@@ -45,17 +45,13 @@ type DashboardSidebarProps = React.ComponentProps<typeof Sidebar> & {
 
 const navItems = [
   { title: "Overview", url: "/", icon: BracketsIcon, locked: false },
-  { title: "Create Pool", url: "/create-pool", icon: AtomIcon, locked: false },
-  { title: "Devices", url: "/devices", icon: ProcessorIcon, locked: false },
-  { title: "Security", url: "/security", icon: CuteRobotIcon, locked: false },
-  { title: "Communication", url: "/communication", icon: EmailIcon, locked: false },
-  { title: "Admin Settings", url: "/admin", icon: GearIcon, locked: true },
+  { title: "Trading", url: "/trading", icon: AtomIcon, locked: false },
+  { title: "Liquidity", url: "/liquidity", icon: ProcessorIcon, locked: false },
+  { title: "Orders", url: "/orders", icon: CuteRobotIcon, locked: false },
+  { title: "Portfolio", url: "/portfolio", icon: EmailIcon, locked: false },
+  { title: "Arbitrage", url: "/arbitrage", icon: GearIcon, locked: false },
+  { title: "Create Pool", url: "/create-pool", icon: AtomIcon, locked: true },
 ];
-
-function shortenAddress(addr: string) {
-  if (!addr) return "";
-  return addr.slice(0, 6) + "..." + addr.slice(-4);
-}
 
 export function DashboardSidebar({
   className,
@@ -63,9 +59,7 @@ export function DashboardSidebar({
   initialActive,
   ...props
 }: DashboardSidebarProps) {
-  const { address } = useAccount();
-  const { connectors, connect } = useConnect();
-  const { disconnect } = useDisconnect();
+  const { address, connected, wallets, connect, disconnect } = useAptosWallet();
 
   // Initialize from initialActive prop or current location
   const [activeUrl, setActiveUrl] = React.useState<string>(() => {
@@ -121,8 +115,8 @@ export function DashboardSidebar({
           <MonkeyIcon className="size-10 group-hover:scale-[1.7] origin-top-left transition-transform" />
         </div>
         <div className="grid flex-1 text-left text-sm leading-tight">
-          <span className="text-2xl font-display">M.O.N.K.Y.</span>
-          <span className="text-xs uppercase">The OS for Rebels</span>
+          <span className="text-2xl font-display">D.I.C.E.</span>
+          <span className="text-xs uppercase">The exchange of future</span>
         </div>
       </SidebarHeader>
 
@@ -180,15 +174,15 @@ export function DashboardSidebar({
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                {!address ? (
+                {!connected ? (
                   <div className="flex flex-col gap-2 px-3 py-2">
-                    {connectors.map((connector) => (
+                    {wallets.map((wallet) => (
                       <button
-                        key={connector.uid}
-                        onClick={() => connect({ connector })}
+                        key={wallet.name}
+                        onClick={() => connect(wallet.name)}
                         className="w-full px-4 py-2 rounded-md bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary/80"
                       >
-                        Connect {connector.name}
+                        Connect {wallet.name}
                       </button>
                     ))}
                   </div>
@@ -201,7 +195,7 @@ export function DashboardSidebar({
                       <div className="group/item pl-3 pr-1.5 pt-2 pb-1.5 flex-1 flex bg-sidebar-accent hover:bg-sidebar-accent-active/75 items-center rounded group-data-[state=open]:bg-sidebar-accent-active group-data-[state=open]:hover:bg-sidebar-accent-active group-data-[state=open]:text-sidebar-accent-foreground">
                         <div className="grid flex-1 text-left text-sm leading-tight">
                           <span className="truncate text-xl font-display">
-                            {shortenAddress(address as string)}
+                            {shortenAddress(address)}
                           </span>
                           <span className="truncate text-xs uppercase opacity-50 group-hover/item:opacity-100">
                             Connected
