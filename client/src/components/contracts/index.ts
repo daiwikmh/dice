@@ -2,6 +2,7 @@ export * from "./types";
 export * from "./amm";
 export * from "./clob";
 export * from "./router";
+export * from "./customCoin";
 
 // Re-export specific types that are commonly used
 export type {
@@ -12,5 +13,7 @@ export type {
   ArbitrageOpportunity,
   Portfolio,
   PoolReserves,
-  SwapQuote
+  SwapQuote,
+  CoinInfo,
+  TokenCreationRequest
 } from "./types";

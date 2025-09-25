@@ -5,7 +5,7 @@ export class RouterContract {
   private static readonly MODULE_ADDRESS = CONTRACT_ADDRESSES.ROUTER;
 
   // Simple single-hop swap
-  static swapExactInputSingle<X, Y>(
+  static swapExactInputSingle(
     tokenX: string,
     tokenY: string,
     feeTier: number,
@@ -23,7 +23,7 @@ export class RouterContract {
   }
 
   // Multi-hop swap
-  static swapExactInputMultihop<X, Y, Z>(
+  static swapExactInputMultihop(
     tokenX: string,
     tokenY: string,
     tokenZ: string,
@@ -42,7 +42,7 @@ export class RouterContract {
   }
 
   // Arbitrage between AMM and CLOB
-  static arbitrageAmmClob<X, Y>(
+  static arbitrageAmmClob(
     tokenX: string,
     tokenY: string,
     ammFeeTier: number,
@@ -60,7 +60,7 @@ export class RouterContract {
   }
 
   // Split order execution between AMM and CLOB
-  static splitOrderExecution<X, Y>(
+  static splitOrderExecution(
     tokenX: string,
     tokenY: string,
     totalAmount: string,
@@ -85,7 +85,7 @@ export class RouterContract {
   }
 
   // View functions
-  static getBestRoutePayload<X, Y>(
+  static getBestRoutePayload(
     tokenX: string,
     tokenY: string,
     amountIn: string,
@@ -98,7 +98,7 @@ export class RouterContract {
     };
   }
 
-  static checkArbitrageOpportunityPayload<X, Y>(
+  static checkArbitrageOpportunityPayload(
     tokenX: string,
     tokenY: string,
     ammFeeTier: number

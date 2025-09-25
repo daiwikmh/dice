@@ -1,81 +1,41 @@
+import { useState } from "react";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import type { InputTransactionData } from "@aptos-labs/wallet-adapter-react";
 
-export interface WalletInfo {
-  name: string;
-  icon?: string;
+export function shortenAddress(address: string | undefined): string {
+  if (!address) return "";
+  return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }
 
-export interface UseAptosWalletReturn {
-  // Connection state
-  connected: boolean;
-  connecting: boolean;
-  address?: string;
-
-  // Wallet management
-  wallets: WalletInfo[];
-  connect: (walletName?: string) => Promise<void>;
-  disconnect: () => Promise<void>;
-
-  // Transaction functions
-  signAndSubmitTransaction: (transaction: InputTransactionData) => Promise<any>;
-}
-
-export function useAptosWallet(): UseAptosWalletReturn {
-  const {
-    connect: aptosConnect,
-    disconnect: aptosDisconnect,
-    account,
-    connected,
-    connecting,
-    wallets: availableWallets,
-    signAndSubmitTransaction,
-  } = useWallet();
+export function useAptosWallet() {
+  const { connect: aptosConnect, disconnect: aptosDisconnect, account, connected, wallets: availableWallets, signAndSubmitTransaction } = useWallet();
+  const [connecting, setConnecting] = useState(false);
 
   const connect = async (walletName?: string) => {
+    setConnecting(true);
     try {
       if (walletName) {
         await aptosConnect(walletName);
-      } else {
-        // Default to first available wallet (usually Petra)
-        const defaultWallet = availableWallets[0];
-        if (defaultWallet) {
-          await aptosConnect(defaultWallet.name);
-        }
+      } else if (availableWallets.length > 0) {
+        await aptosConnect(availableWallets[0].name);
       }
-    } catch (error) {
-      console.error("Failed to connect wallet:", error);
-      throw error;
+    } finally {
+      setConnecting(false);
     }
   };
 
   const disconnect = async () => {
-    try {
-      await aptosDisconnect();
-    } catch (error) {
-      console.error("Failed to disconnect wallet:", error);
-      throw error;
-    }
+    await aptosDisconnect();
   };
 
-  const wallets: WalletInfo[] = availableWallets.map((wallet) => ({
-    name: wallet.name,
-    icon: wallet.icon,
-  }));
+  const wallets = availableWallets.map(w => ({ name: w.name, icon: w.icon }));
 
   return {
     connected,
     connecting,
-    address: account?.address,
+    address: account?.address?.toString(),
     wallets,
     connect,
     disconnect,
     signAndSubmitTransaction,
   };
-}
-
-export function shortenAddress(addr?: string): string {
-  if (!addr || typeof addr !== 'string') return "";
-  if (addr.length <= 10) return addr;
-  return addr.slice(0, 6) + "..." + addr.slice(-4);
 }

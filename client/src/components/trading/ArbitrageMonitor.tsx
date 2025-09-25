@@ -60,7 +60,7 @@ interface ArbitrageStats {
 }
 
 export function ArbitrageMonitor() {
-  const { connected, address, signAndSubmitTransaction } = useAptosWallet();
+  const { connected, signAndSubmitTransaction } = useAptosWallet();
   const [opportunities, setOpportunities] = React.useState<ArbitrageOpportunity[]>(MOCK_OPPORTUNITIES);
   const [isLoading, setIsLoading] = React.useState(false);
   const [lastUpdate, setLastUpdate] = React.useState(Date.now());

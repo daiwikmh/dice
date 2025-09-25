@@ -17,6 +17,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useAptosWallet } from "@/hooks/useAptosWallet";
 import { AMMContract, RouterContract, FEE_TIERS } from "@/components/contracts";
+import { TokenPriceChart } from "./TokenPriceChart";
 import { ArrowUpDown, Settings, Zap } from "lucide-react";
 
 interface Token {
@@ -24,6 +25,7 @@ interface Token {
   name: string;
   address: string;
   decimals: number;
+  isDirectTransfer?: boolean;
 }
 
 const TOKENS: Token[] = [
@@ -39,6 +41,13 @@ const TOKENS: Token[] = [
     address: "0x1bb7e129d639ef1ca7e0d66a8d9af8f4af3ac2c40e0e3132a19a18ad85469a56::custom_coin::CustomCoin",
     decimals: 8,
   },
+  {
+    symbol: "USDC",
+    name: "USD Coin",
+    address: "0xbae207659db88bea0cbead6da0ed00aac12edcdda169e591cd41c94180b46f3b",
+    decimals: 6,
+    isDirectTransfer: true, // USDC transfers directly from wallet
+  },
 ];
 
 export function TradingInterface() {
@@ -52,8 +61,19 @@ export function TradingInterface() {
   const [feeTier, setFeeTier] = React.useState(FEE_TIERS.LOW);
   const [isLoading, setIsLoading] = React.useState(false);
   const [routingMode, setRoutingMode] = React.useState<"amm" | "router">("router");
+  const [placedOrders, setPlacedOrders] = React.useState<Array<{
+    id: string;
+    fromToken: string;
+    toToken: string;
+    fromAmount: string;
+    toAmount: string;
+    status: 'pending' | 'completed' | 'failed';
+    timestamp: number;
+    txHash?: string;
+  }>>([]);
 
   const swapTokens = () => {
+    // Maintain consistent pool pairing (always keep same token addresses for pool)
     const temp = fromToken;
     setFromToken(toToken);
     setToToken(temp);
@@ -61,45 +81,95 @@ export function TradingInterface() {
     setToAmount(fromAmount);
   };
 
+  const getPoolTokens = () => {
+    // For pool consistency, always use the same token order regardless of swap direction
+    const tokenAddresses = [fromToken.address, toToken.address].sort();
+    return {
+      tokenX: tokenAddresses[0],
+      tokenY: tokenAddresses[1],
+      isReversed: tokenAddresses[0] !== fromToken.address
+    };
+  };
+
   const handleSwap = async () => {
     if (!connected || !fromAmount) return;
 
     setIsLoading(true);
+
+    // Create order tracking entry
+    const orderId = Date.now().toString();
+    const newOrder = {
+      id: orderId,
+      fromToken: fromToken.symbol,
+      toToken: toToken.symbol,
+      fromAmount: fromAmount,
+      toAmount: toAmount || "0",
+      status: 'pending' as const,
+      timestamp: Date.now(),
+    };
+
+    setPlacedOrders(prev => [newOrder, ...prev]);
+
     try {
+      // Check if USDC is involved for direct transfer
+      if (fromToken.isDirectTransfer || toToken.isDirectTransfer) {
+        console.log("USDC transfer detected - handling direct wallet transfer");
+        // For USDC, we would implement direct wallet transfer logic here
+        // This would be a simple coin transfer, not through pools
+        throw new Error("USDC direct transfers not yet implemented");
+      }
+
       // Users enter raw units directly (e.g., 100000000 = 1 APT)
       const amountIn = Math.floor(parseFloat(fromAmount)).toString();
       const minAmountOut = Math.floor(parseFloat(toAmount || "0") * 0.95).toString(); // 5% slippage
+
+      // Get consistent pool tokens
+      const { tokenX, tokenY, isReversed } = getPoolTokens();
 
       let transaction;
 
       if (routingMode === "amm") {
         transaction = AMMContract.swapExactIn(
-          fromToken.address,
-          toToken.address,
+          tokenX,
+          tokenY,
           feeTier,
           amountIn,
           minAmountOut,
-          true
+          !isReversed // Swap direction based on token order
         );
       } else {
         transaction = RouterContract.swapExactInputSingle(
-          fromToken.address,
-          toToken.address,
+          tokenX,
+          tokenY,
           feeTier,
           amountIn,
           minAmountOut,
-          true
+          !isReversed // Swap direction based on token order
         );
       }
 
       const response = await signAndSubmitTransaction(transaction);
       console.log("Swap successful:", response);
 
+      // Update order status
+      setPlacedOrders(prev => prev.map(order =>
+        order.id === orderId
+          ? { ...order, status: 'completed', txHash: response.hash }
+          : order
+      ));
+
       // Reset form
       setFromAmount("");
       setToAmount("");
     } catch (error) {
       console.error("Swap failed:", error);
+
+      // Update order status to failed
+      setPlacedOrders(prev => prev.map(order =>
+        order.id === orderId
+          ? { ...order, status: 'failed' }
+          : order
+      ));
     } finally {
       setIsLoading(false);
     }
@@ -123,8 +193,9 @@ export function TradingInterface() {
   }, [fromAmount, fromToken, toToken, feeTier]);
 
   return (
-    <div className="max-w-md mx-auto">
-      <Card>
+    <div className="max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
           <CardTitle className="text-2xl font-bold">Swap Tokens</CardTitle>
           <div className="flex items-center space-x-2">
@@ -299,10 +370,54 @@ export function TradingInterface() {
                 <span>Slippage:</span>
                 <span>{slippage}%</span>
               </div>
+              {(fromToken.isDirectTransfer || toToken.isDirectTransfer) && (
+                <div className="text-xs text-warning bg-warning/10 p-2 rounded mt-2">
+                  ⚠️ USDC transfers are handled directly from wallet
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Recent Orders */}
+          {placedOrders.length > 0 && (
+            <div className="mt-4 pt-4 border-t">
+              <h4 className="text-sm font-medium mb-2">Recent Orders</h4>
+              <div className="space-y-2 max-h-32 overflow-y-auto">
+                {placedOrders.slice(0, 3).map((order) => (
+                  <div
+                    key={order.id}
+                    className="flex items-center justify-between text-xs p-2 bg-muted/50 rounded"
+                  >
+                    <div>
+                      <span className="font-mono">
+                        {parseFloat(order.fromAmount).toLocaleString()} {order.fromToken} → {parseFloat(order.toAmount).toLocaleString()} {order.toToken}
+                      </span>
+                      <div className="text-muted-foreground">
+                        {new Date(order.timestamp).toLocaleTimeString()}
+                      </div>
+                    </div>
+                    <div className={`px-2 py-1 rounded-full text-xs ${
+                      order.status === 'completed' ? 'bg-success/20 text-success' :
+                      order.status === 'failed' ? 'bg-destructive/20 text-destructive' :
+                      'bg-warning/20 text-warning'
+                    }`}>
+                      {order.status}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </CardContent>
       </Card>
+
+      {/* Price Chart */}
+      <TokenPriceChart
+        tokenSymbol={fromToken.symbol}
+        tokenName={fromToken.name}
+        className="lg:sticky lg:top-4"
+      />
+    </div>
     </div>
   );
 }

@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { CLOBContract } from "@/components/contracts";
 import type { OrderBookLevel, OrderBookDepth } from "@/components/contracts";
 
 import { TrendingUp, RefreshCw } from "lucide-react";

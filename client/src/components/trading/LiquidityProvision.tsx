@@ -39,22 +39,28 @@ const TOKENS: Token[] = [
     address: "0x1bb7e129d639ef1ca7e0d66a8d9af8f4af3ac2c40e0e3132a19a18ad85469a56::custom_coin::CustomCoin",
     decimals: 8,
   },
+  {
+    symbol: "USDC",
+    name: "USD Coin",
+    address: "0xbae207659db88bea0cbead6da0ed00aac12edcdda169e591cd41c94180b46f3b",
+    decimals: 6,
+  },
 ];
 
 // Remove mock positions - these will be fetched from the blockchain
 const INITIAL_POSITIONS: LiquidityPosition[] = [];
 
 export function LiquidityProvision() {
-  const { connected, address, signAndSubmitTransaction } = useAptosWallet();
+  const { connected, signAndSubmitTransaction } = useAptosWallet();
 
   const [activeTab, setActiveTab] = React.useState("add");
   const [tokenX, setTokenX] = React.useState<Token>(TOKENS[0]);
   const [tokenY, setTokenY] = React.useState<Token>(TOKENS[1]);
   const [amountX, setAmountX] = React.useState("");
   const [amountY, setAmountY] = React.useState("");
-  const [feeTier, setFeeTier] = React.useState(FEE_TIERS.LOW);
+  const [feeTier, setFeeTier] = React.useState<5 | 30>(FEE_TIERS.LOW);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [positions, setPositions] = React.useState<LiquidityPosition[]>(INITIAL_POSITIONS);
+  const [positions] = React.useState<LiquidityPosition[]>(INITIAL_POSITIONS);
 
   // Remove liquidity state
   const [selectedPosition, setSelectedPosition] = React.useState<LiquidityPosition | null>(null);
@@ -230,7 +236,7 @@ export function LiquidityProvision() {
                   <Label>Fee Tier</Label>
                   <Select
                     value={feeTier.toString()}
-                    onValueChange={(value) => setFeeTier(parseInt(value))}
+                    onValueChange={(value) => setFeeTier(parseInt(value) as 5 | 30)}
                   >
                     <SelectTrigger>
                       <SelectValue />

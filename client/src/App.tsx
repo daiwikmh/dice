@@ -11,6 +11,7 @@ import LiquidityPage from "./pages/LiquidityPage";
 import OrdersPage from "./pages/OrdersPage";
 import PortfolioPage from "./pages/PortfolioPage";
 import ArbitragePage from "./pages/ArbitragePage";
+import PoolManagementPage from "./pages/PoolManagementPage";
 
 function App() {
   const client = new QueryClient();
@@ -35,6 +36,7 @@ function App() {
                 <Route path="/orders" element={<OrdersPage />} />
                 <Route path="/portfolio" element={<PortfolioPage />} />
                 <Route path="/arbitrage" element={<ArbitragePage />} />
+                <Route path="/pool-management" element={<PoolManagementPage />} />
               </Routes>
             </AppLayout>
           </BrowserRouter>

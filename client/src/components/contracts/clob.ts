@@ -1,11 +1,11 @@
-import { CONTRACT_ADDRESSES, ORDER_SIDES } from "./types";
+import { CONTRACT_ADDRESSES } from "./types";
 import type { InputTransactionData } from "@aptos-labs/wallet-adapter-react";
 
 export class CLOBContract {
   private static readonly MODULE_ADDRESS = CONTRACT_ADDRESSES.CLOB;
 
   // Create a new market
-  static createMarket<BaseCoin, QuoteCoin>(
+  static createMarket(
     baseCoin: string,
     quoteCoin: string,
     tickSize: string,
@@ -21,7 +21,7 @@ export class CLOBContract {
   }
 
   // Place limit order
-  static placeLimitOrder<BaseCoin, QuoteCoin>(
+  static placeLimitOrder(
     baseCoin: string,
     quoteCoin: string,
     side: number, // 0 for BUY, 1 for SELL
@@ -38,7 +38,7 @@ export class CLOBContract {
   }
 
   // Place market order
-  static placeMarketOrder<BaseCoin, QuoteCoin>(
+  static placeMarketOrder(
     baseCoin: string,
     quoteCoin: string,
     side: number, // 0 for BUY, 1 for SELL
@@ -54,7 +54,7 @@ export class CLOBContract {
   }
 
   // Cancel order
-  static cancelOrder<BaseCoin, QuoteCoin>(
+  static cancelOrder(
     baseCoin: string,
     quoteCoin: string,
     orderId: string
@@ -69,7 +69,7 @@ export class CLOBContract {
   }
 
   // View functions
-  static getBestBidAskPayload<BaseCoin, QuoteCoin>(
+  static getBestBidAskPayload(
     baseCoin: string,
     quoteCoin: string
   ) {
@@ -80,7 +80,7 @@ export class CLOBContract {
     };
   }
 
-  static getOrderBookDepthPayload<BaseCoin, QuoteCoin>(
+  static getOrderBookDepthPayload(
     baseCoin: string,
     quoteCoin: string,
     levels: number

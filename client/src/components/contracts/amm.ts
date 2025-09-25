@@ -4,8 +4,18 @@ import type { InputTransactionData } from "@aptos-labs/wallet-adapter-react";
 export class AMMContract {
   private static readonly MODULE_ADDRESS = CONTRACT_ADDRESSES.AMM;
 
+  // Initialize the AMM (must be called by deployer/admin first)
+  static initialize(): InputTransactionData {
+    return {
+      data: {
+        function: `${this.MODULE_ADDRESS}::initialize`,
+        functionArguments: [],
+      },
+    };
+  }
+
   // Create a new trading pool
-  static createPool<X, Y>(
+  static createPool(
     tokenX: string,
     tokenY: string,
     feeTier: number = FEE_TIERS.LOW
@@ -20,7 +30,7 @@ export class AMMContract {
   }
 
   // Add liquidity to pool
-  static addLiquidity<X, Y>(
+  static addLiquidity(
     tokenX: string,
     tokenY: string,
     feeTier: number,
@@ -38,7 +48,7 @@ export class AMMContract {
   }
 
   // Remove liquidity from pool
-  static removeLiquidity<X, Y>(
+  static removeLiquidity(
     tokenX: string,
     tokenY: string,
     feeTier: number,
@@ -56,7 +66,7 @@ export class AMMContract {
   }
 
   // Swap exact input
-  static swapExactIn<X, Y>(
+  static swapExactIn(
     tokenX: string,
     tokenY: string,
     feeTier: number,
@@ -74,7 +84,7 @@ export class AMMContract {
   }
 
   // View functions - these would typically be called using the Aptos client's view function
-  static getPoolReservesPayload<X, Y>(
+  static getPoolReservesPayload(
     tokenX: string,
     tokenY: string,
     feeTier: number
@@ -86,7 +96,7 @@ export class AMMContract {
     };
   }
 
-  static quoteSwapExactInPayload<X, Y>(
+  static quoteSwapExactInPayload(
     tokenX: string,
     tokenY: string,
     amountIn: string,

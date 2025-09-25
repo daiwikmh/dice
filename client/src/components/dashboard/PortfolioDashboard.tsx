@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/table";
 import { useAptosWallet } from "@/hooks/useAptosWallet";
 import {  ORDER_SIDES } from "@/components/contracts";
-import type { Portfolio, LiquidityPosition, Order } from "@/components/contracts";
+import type { Portfolio } from "@/components/contracts";
 import {
   Wallet,
   TrendingUp,
@@ -82,7 +82,7 @@ const MOCK_TOKEN_PRICES = {
 };
 
 export function PortfolioDashboard() {
-  const { connected, address } = useAptosWallet();
+  const { connected } = useAptosWallet();
   const [portfolio, setPortfolio] = React.useState<Portfolio>(MOCK_PORTFOLIO);
   const [isLoading, setIsLoading] = React.useState(false);
 

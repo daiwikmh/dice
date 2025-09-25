@@ -1,10 +1,10 @@
-import type { InputTransactionData } from "@aptos-labs/wallet-adapter-react";
 
 // Contract addresses
 export const CONTRACT_ADDRESSES = {
   AMM: "0x1bb7e129d639ef1ca7e0d66a8d9af8f4af3ac2c40e0e3132a19a18ad85469a56::amm",
   CLOB: "0x1bb7e129d639ef1ca7e0d66a8d9af8f4af3ac2c40e0e3132a19a18ad85469a56::clob",
   ROUTER: "0x1bb7e129d639ef1ca7e0d66a8d9af8f4af3ac2c40e0e3132a19a18ad85469a56::router",
+  CUSTOM_COIN: "0x1bb7e129d639ef1ca7e0d66a8d9af8f4af3ac2c40e0e3132a19a18ad85469a56::custom_coin",
 } as const;
 
 // Fee tiers
@@ -79,4 +79,23 @@ export interface Portfolio {
   orders: Order[];
   pnl: string;
   total_value: string;
+}
+
+export interface CoinInfo {
+  name: string;
+  symbol: string;
+  decimals: number;
+  supply: string;
+}
+
+export interface TokenCreationRequest {
+  id: string;
+  name: string;
+  symbol: string;
+  decimals: number;
+  initialSupply: string;
+  status: 'pending' | 'completed' | 'failed';
+  timestamp: number;
+  txHash?: string;
+  tokenAddress?: string;
 }

@@ -55,6 +55,12 @@ const TOKENS: Token[] = [
     address: "0x1bb7e129d639ef1ca7e0d66a8d9af8f4af3ac2c40e0e3132a19a18ad85469a56::custom_coin::CustomCoin",
     decimals: 8,
   },
+  {
+    symbol: "USDC",
+    name: "USD Coin",
+    address: "0xbae207659db88bea0cbead6da0ed00aac12edcdda169e591cd41c94180b46f3b",
+    decimals: 6,
+  },
 ];
 
 const MOCK_ORDERS: Order[] = [
@@ -97,7 +103,7 @@ const MOCK_ORDERS: Order[] = [
 ];
 
 export function OrderManagement() {
-  const { connected, address, signAndSubmitTransaction } = useAptosWallet();
+  const { connected, signAndSubmitTransaction } = useAptosWallet();
 
   const [baseCoin, setBaseCoin] = React.useState<Token>(TOKENS[0]);
   const [quoteCoin, setQuoteCoin] = React.useState<Token>(TOKENS[1]);
