@@ -51,14 +51,14 @@ const TOKENS: Token[] = [
 ];
 
 export function TradingInterface() {
-  const { connected, address, signAndSubmitTransaction } = useAptosWallet();
+  const { connected, signAndSubmitTransaction } = useAptosWallet();
 
   const [fromToken, setFromToken] = React.useState<Token>(TOKENS[0]);
   const [toToken, setToToken] = React.useState<Token>(TOKENS[1]);
   const [fromAmount, setFromAmount] = React.useState("");
   const [toAmount, setToAmount] = React.useState("");
   const [slippage, setSlippage] = React.useState("0.5");
-  const [feeTier, setFeeTier] = React.useState(FEE_TIERS.LOW);
+  const [feeTier, setFeeTier] = React.useState<5 | 30>(FEE_TIERS.LOW);
   const [isLoading, setIsLoading] = React.useState(false);
   const [routingMode, setRoutingMode] = React.useState<"amm" | "router">("router");
   const [placedOrders, setPlacedOrders] = React.useState<Array<{
@@ -195,7 +195,7 @@ export function TradingInterface() {
   return (
     <div className="max-w-6xl mx-auto">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
+      <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
           <CardTitle className="text-2xl font-bold">Swap Tokens</CardTitle>
           <div className="flex items-center space-x-2">
@@ -319,7 +319,7 @@ export function TradingInterface() {
                 <Label htmlFor="fee-tier">Fee Tier</Label>
                 <Select
                   value={feeTier.toString()}
-                  onValueChange={(value) => setFeeTier(parseInt(value))}
+                  onValueChange={(value) => setFeeTier(parseInt(value) as 5 | 30)}
                 >
                   <SelectTrigger>
                     <SelectValue />
