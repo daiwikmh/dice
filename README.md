@@ -109,8 +109,8 @@ Built with modern web technologies for maximum performance and user experience:
 
 1. **Clone the Repository**
 ```bash
-git clone https://github.com/your-org/dice-exchange.git
-cd dice-exchange/client
+git clone https://github.com/your-org/dice.git
+cd dice/client
 ```
 
 2. **Install Dependencies**
