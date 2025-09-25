@@ -50,7 +50,7 @@ const navItems = [
   { title: "Orders", url: "/orders", icon: CuteRobotIcon, locked: false },
   { title: "Portfolio", url: "/portfolio", icon: EmailIcon, locked: false },
   { title: "Arbitrage", url: "/arbitrage", icon: GearIcon, locked: false },
-  { title: "Create Pool", url: "/create-pool", icon: AtomIcon, locked: true },
+  { title: "Tokenizer", url: "/pool-management", icon: AtomIcon, locked: false },
 ];
 
 export function DashboardSidebar({

@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAptosWallet } from "@/hooks/useAptosWallet";
-import { AMMContract, FEE_TIERS, CustomCoinContract } from "@/components/contracts";
+import { AMMContract, FEE_TIERS, CustomCoinContract, CONTRACT_ADDRESSES } from "@/components/contracts";
 import { TokenPriceChart } from "./TokenPriceChart";
 import type { TokenCreationRequest } from "@/components/contracts";
 import {
@@ -93,6 +93,7 @@ export function PoolManagement() {
   const [tokenSymbol, setTokenSymbol] = React.useState("");
   const [tokenDecimals, setTokenDecimals] = React.useState("8");
   const [initialSupply, setInitialSupply] = React.useState("");
+  const [monitorSupply, setMonitorSupply] = React.useState(true);
   const [isCreatingToken, setIsCreatingToken] = React.useState(false);
   const [tokenCreationRequests, setTokenCreationRequests] = React.useState<TokenCreationRequest[]>([]);
 
@@ -193,30 +194,46 @@ export function PoolManagement() {
     setTokenCreationRequests(prev => [newRequest, ...prev]);
 
     try {
-      // Step 1: Initialize the coin
-      const initTransaction = CustomCoinContract.initializeCoin(
-        tokenName,
-        tokenSymbol.toUpperCase(),
-        parseInt(tokenDecimals),
-        true
-      );
+      // Use the only available struct type in the contract
+      const coinType = `${CONTRACT_ADDRESSES.CUSTOM_COIN}::CustomCoin`;
 
-      const initResponse = await signAndSubmitTransaction(initTransaction);
-      console.log("Token initialized successfully:", initResponse);
+      let initResponse;
 
-      // Step 2: Register the coin for the creator
-      const registerTransaction = CustomCoinContract.registerCoin();
-      await signAndSubmitTransaction(registerTransaction);
+      // Step 1: Try to initialize the coin (will fail if already initialized)
+      try {
+        const initTransaction = CustomCoinContract.initializeCoin(
+          tokenName,
+          tokenSymbol.toUpperCase(),
+          parseInt(tokenDecimals),
+          monitorSupply,
+          coinType
+        );
 
-      // Step 3: Mint initial supply to creator
+        initResponse = await signAndSubmitTransaction(initTransaction);
+        console.log("Token initialized successfully:", initResponse);
+      } catch (initError) {
+        // If coin already initialized, we can't create a new one with this contract
+        throw new Error("This contract only allows one coin type per admin address. Coin already initialized.");
+      }
+
+      // Step 2: Register the coin for the creator's account (skip if already registered)
+      try {
+        const registerTransaction = CustomCoinContract.registerCoin(coinType);
+        await signAndSubmitTransaction(registerTransaction);
+      } catch (regError) {
+        console.log("Coin already registered for this account");
+      }
+
+      // Step 3: Mint initial supply to creator (this will work even if coin was already initialized)
       const mintTransaction = CustomCoinContract.mintWithAdmin(
         address!,
-        (parseFloat(initialSupply) * Math.pow(10, parseInt(tokenDecimals))).toString()
+        (parseFloat(initialSupply) * Math.pow(10, parseInt(tokenDecimals))).toString(),
+        coinType
       );
       await signAndSubmitTransaction(mintTransaction);
 
-      // Generate token address (in real implementation, this would come from the contract)
-      const tokenAddress = `${address}::${tokenSymbol.toLowerCase()}_coin::${tokenSymbol}Coin`;
+      // Use the coin type as token address
+      const tokenAddress = coinType;
 
       // Update request status
       setTokenCreationRequests(prev => prev.map(req =>
@@ -244,6 +261,7 @@ export function PoolManagement() {
       setTokenSymbol("");
       setTokenDecimals("8");
       setInitialSupply("");
+      setMonitorSupply(true);
 
     } catch (error) {
       console.error("Token creation failed:", error);
@@ -264,9 +282,13 @@ export function PoolManagement() {
 
     setIsMinting(true);
     try {
-      const transaction = CustomCoinContract.mint(
+      // Use the token's coin type for minting
+      const coinType = selectedToken.tokenAddress || `${CONTRACT_ADDRESSES.CUSTOM_COIN}::${selectedToken.symbol}`;
+
+      const transaction = CustomCoinContract.mintWithAdmin(
         mintToAddress,
-        (parseFloat(mintAmount) * Math.pow(10, selectedToken.decimals)).toString()
+        (parseFloat(mintAmount) * Math.pow(10, selectedToken.decimals)).toString(),
+        coinType
       );
 
       const response = await signAndSubmitTransaction(transaction);
@@ -287,9 +309,13 @@ export function PoolManagement() {
 
     setIsTransferring(true);
     try {
+      // Use the token's coin type for transfer
+      const coinType = selectedToken.tokenAddress || `${CONTRACT_ADDRESSES.CUSTOM_COIN}::${selectedToken.symbol}`;
+
       const transaction = CustomCoinContract.transfer(
         transferToAddress,
-        (parseFloat(transferAmount) * Math.pow(10, selectedToken.decimals)).toString()
+        (parseFloat(transferAmount) * Math.pow(10, selectedToken.decimals)).toString(),
+        coinType
       );
 
       const response = await signAndSubmitTransaction(transaction);
@@ -618,6 +644,36 @@ export function PoolManagement() {
                         Amount of tokens to mint initially to your wallet
                       </p>
                     </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="coin-type">Coin Type Name</Label>
+                      <Input
+                        id="coin-type"
+                        placeholder="EXAMPLE"
+                        value={tokenSymbol}
+                        onChange={(e) => setTokenSymbol(e.target.value.toUpperCase())}
+                        maxLength={20}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Will create: {CONTRACT_ADDRESSES.CUSTOM_COIN}::{tokenSymbol || "EXAMPLE"}
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id="monitor-supply"
+                          checked={monitorSupply}
+                          onChange={(e) => setMonitorSupply(e.target.checked)}
+                          className="rounded border-gray-300"
+                        />
+                        <Label htmlFor="monitor-supply">Monitor Supply</Label>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Enable supply tracking and events for this token
+                      </p>
+                    </div>
                   </div>
                 </div>
 
@@ -640,6 +696,10 @@ export function PoolManagement() {
                       <div className="flex justify-between">
                         <span>Initial Supply:</span>
                         <span>{initialSupply || "0"} {tokenSymbol || "TOKENS"}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Monitor Supply:</span>
+                        <span>{monitorSupply ? "Yes" : "No"}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Admin:</span>

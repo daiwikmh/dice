@@ -1,222 +1,85 @@
 {
   "dashboardStats": [
     {
-      "label": "ISSUES COMPLETED",
-      "value": "49%",
-      "description": "WEEKLY SCOPE",
+      "label": "TOKENS CREATED",
+      "value": "12",
+      "description": "THIS WEEK",
       "intent": "positive",
       "icon": "gear",
       "direction": "up"
     },
     {
-      "label": "MINUTES LOST",
-      "value": "642'",
-      "description": "IN MEETINGS AND RABBIT HOLES",
-      "intent": "negative",
+      "label": "TRADING VOLUME",
+      "value": "₳1.2M",
+      "description": "IN AMM AND CLOB",
+      "intent": "positive",
       "icon": "proccesor",
-      "direction": "down"
+      "direction": "up"
     },
     {
-      "label": "ACCIDENTS",
-      "value": "0",
-      "description": "THE CLIENT ALWAYS IS RIGHT",
+      "label": "IMPERMANENT LOSS",
+      "value": "0.5%",
+      "description": "PROTECTED BY STRATEGIES",
       "intent": "neutral",
       "icon": "boom",
-      "tag": "4 weeks 🔥"
+      "tag": "4 pools 🔥"
     }
   ],
   "chartData": {
     "week": [
-      {
-        "date": "06/07",
-        "sales": 50000,
-        "spendings": 30000,
-        "coffee": 10000
-      },
-      {
-        "date": "07/07",
-        "sales": 250000,
-        "spendings": 15000,
-        "coffee": 30000
-      },
-      {
-        "date": "08/07",
-        "sales": 200000,
-        "spendings": 50000,
-        "coffee": 25000
-      },
-      {
-        "date": "09/07",
-        "sales": 280000,
-        "spendings": 60000,
-        "coffee": 45000
-      },
-      {
-        "date": "10/07",
-        "sales": 120000,
-        "spendings": 20000,
-        "coffee": 15000
-      },
-      {
-        "date": "11/07",
-        "sales": 180000,
-        "spendings": 55000,
-        "coffee": 20000
-      },
-      {
-        "date": "12/07",
-        "sales": 500000,
-        "spendings": 35000,
-        "coffee": 20000
-      },
-      {
-        "date": "13/07",
-        "sales": 130000,
-        "spendings": 60000,
-        "coffee": 10000
-      }
+      { "date": "06/07", "sales": 120, "spendings": 30, "coffee": 5 },
+      { "date": "07/07", "sales": 150, "spendings": 40, "coffee": 6 },
+      { "date": "08/07", "sales": 180, "spendings": 50, "coffee": 7 },
+      { "date": "09/07", "sales": 200, "spendings": 60, "coffee": 8 },
+      { "date": "10/07", "sales": 170, "spendings": 45, "coffee": 6 },
+      { "date": "11/07", "sales": 190, "spendings": 50, "coffee": 7 },
+      { "date": "12/07", "sales": 210, "spendings": 55, "coffee": 8 },
+      { "date": "13/07", "sales": 230, "spendings": 60, "coffee": 9 }
     ],
     "month": [
-      { "date": "Jan", "spendings": 45000, "sales": 180000, "coffee": 25000 },
-      { "date": "Feb", "spendings": 30000, "sales": 120000, "coffee": 20000 },
-      { "date": "Mar", "spendings": 65000, "sales": 280000, "coffee": 35000 },
-      { "date": "Apr", "spendings": 25000, "sales": 160000, "coffee": 18000 },
-      { "date": "May", "spendings": 80000, "sales": 350000, "coffee": 45000 },
-      { "date": "Jun", "spendings": 40000, "sales": 90000, "coffee": 25000 },
-      { "date": "Jul", "spendings": 70000, "sales": 220000, "coffee": 40000 },
-      { "date": "Aug", "spendings": 55000, "sales": 170000, "coffee": 30000 },
-      { "date": "Sep", "spendings": 60000, "sales": 200000, "coffee": 35000 },
-      { "date": "Oct", "spendings": 35000, "sales": 140000, "coffee": 22000 },
-      { "date": "Nov", "spendings": 75000, "sales": 340000, "coffee": 38000 },
-      { "date": "Dec", "spendings": 90000, "sales": 420000, "coffee": 50000 }
+      { "date": "Jan", "spendings": 200, "sales": 1200, "coffee": 100 },
+      { "date": "Feb", "spendings": 180, "sales": 1000, "coffee": 90 },
+      { "date": "Mar", "spendings": 220, "sales": 1400, "coffee": 120 },
+      { "date": "Apr", "spendings": 210, "sales": 1300, "coffee": 110 },
+      { "date": "May", "spendings": 250, "sales": 1600, "coffee": 130 },
+      { "date": "Jun", "spendings": 190, "sales": 1100, "coffee": 100 },
+      { "date": "Jul", "spendings": 230, "sales": 1500, "coffee": 140 },
+      { "date": "Aug", "spendings": 210, "sales": 1400, "coffee": 120 },
+      { "date": "Sep", "spendings": 240, "sales": 1600, "coffee": 130 },
+      { "date": "Oct", "spendings": 200, "sales": 1200, "coffee": 110 },
+      { "date": "Nov", "spendings": 260, "sales": 1700, "coffee": 150 },
+      { "date": "Dec", "spendings": 280, "sales": 1800, "coffee": 160 }
     ],
     "year": [
-      {
-        "date": "2020",
-        "spendings": 280000,
-        "sales": 580000,
-        "coffee": 150000
-      },
-      {
-        "date": "2021",
-        "spendings": 320000,
-        "sales": 650000,
-        "coffee": 180000
-      },
-      {
-        "date": "2022",
-        "spendings": 450000,
-        "sales": 950000,
-        "coffee": 250000
-      },
-      {
-        "date": "2023",
-        "spendings": 200000,
-        "sales": 520000,
-        "coffee": 120000
-      },
-      { "date": "2024", "spendings": 380000, "sales": 820000, "coffee": 200000 }
+      { "date": "2020", "spendings": 1800, "sales": 8000, "coffee": 900 },
+      { "date": "2021", "spendings": 2000, "sales": 9000, "coffee": 1000 },
+      { "date": "2022", "spendings": 2400, "sales": 11000, "coffee": 1200 },
+      { "date": "2023", "spendings": 2200, "sales": 10000, "coffee": 1100 },
+      { "date": "2024", "spendings": 2600, "sales": 12000, "coffee": 1300 }
     ]
   },
   "rebelsRanking": [
-    {
-      "id": 1,
-      "name": "KRIMSON",
-      "handle": "@KRIMSON",
-      "streak": "2 WEEKS STREAK 🔥",
-      "points": 148,
-      "avatar": "/avatars/user_krimson.png",
-      "featured": true,
-      "subtitle": "2 WEEKS STREAK 🔥"
-    },
-    {
-      "id": 2,
-      "name": "MATI",
-      "handle": "@MATI",
-      "streak": "",
-      "points": 129,
-      "avatar": "/avatars/user_mati.png"
-    },
-    {
-      "id": 3,
-      "name": "PEK",
-      "handle": "@MATT",
-      "streak": "",
-      "points": 108,
-      "avatar": "/avatars/user_pek.png"
-    },
-    {
-      "id": 4,
-      "name": "JOYBOY",
-      "handle": "@JOYBOY",
-      "streak": "",
-      "points": 64,
-      "avatar": "/avatars/user_joyboy.png"
-    }
+    { "id": 1, "name": "DICE_ADMIN", "handle": "@DICE_ADMIN", "streak": "3 WEEKS STREAK 🔥", "points": 200, "avatar": "/avatars/admin.png", "featured": true, "subtitle": "3 WEEKS ACTIVE 🔥" },
+    { "id": 2, "name": "TRADER_ONE", "handle": "@TRADER_ONE", "streak": "", "points": 180, "avatar": "/avatars/trader1.png" },
+    { "id": 3, "name": "LIQUIDITY_GURU", "handle": "@LIQUIDITY", "streak": "", "points": 150, "avatar": "/avatars/liquidity.png" },
+    { "id": 4, "name": "TOKEN_MAKER", "handle": "@TOKEN_MAKER", "streak": "", "points": 120, "avatar": "/avatars/token.png" }
   ],
   "securityStatus": [
-    {
-      "title": "GUARD BOTS",
-      "value": "124/124",
-      "status": "[RUNNING...]",
-      "variant": "success"
-    },
-    {
-      "title": "FIREWALL",
-      "value": "99.9%",
-      "status": "[BLOCKED]",
-      "variant": "success"
-    },
-    {
-      "title": "HTML WARNINGS",
-      "value": "12042",
-      "status": "[ACCESSIBILITY]",
-      "variant": "warning"
-    }
+    { "title": "GUARD BOTS", "value": "50/50", "status": "[RUNNING...]", "variant": "success" },
+    { "title": "FIREWALL", "value": "99.9%", "status": "[SECURED]", "variant": "success" },
+    { "title": "HTML WARNINGS", "value": "3200", "status": "[ACCESSIBILITY]", "variant": "warning" }
   ],
   "notifications": [
-    {
-      "id": "notif-1",
-      "title": "PAYMENT RECEIVED",
-      "message": "Your payment to Rampant Studio has been processed successfully.",
-      "timestamp": "2024-07-10T13:39:00Z",
-      "type": "success",
-      "read": false,
-      "priority": "medium"
-    },
-    {
-      "id": "notif-2",
-      "title": "INTRO: JOYCO STUDIO AND V0",
-      "message": "About us - We're a healthcare company focused on accessibility and innovation.",
-      "timestamp": "2024-07-10T13:35:00Z",
-      "type": "info",
-      "read": false,
-      "priority": "low"
-    },
-    {
-      "id": "notif-3",
-      "title": "SYSTEM UPDATE",
-      "message": "Security patches have been applied to all guard bots.",
-      "timestamp": "2024-07-10T12:15:00Z",
-      "type": "info",
-      "read": true,
-      "priority": "medium"
-    },
-    {
-      "id": "notif-4",
-      "title": "FIREWALL ALERT",
-      "message": "Blocked 247 suspicious connection attempts in the last hour.",
-      "timestamp": "2024-07-10T11:45:00Z",
-      "type": "warning",
-      "read": true,
-      "priority": "high"
-    }
+    { "id": "notif-1", "title": "TOKEN CREATED", "message": "Your new token has been minted successfully.", "timestamp": "2025-07-10T13:39:00Z", "type": "success", "read": false, "priority": "medium" },
+    { "id": "notif-2", "title": "TRADE EXECUTED", "message": "Your AMM swap completed successfully.", "timestamp": "2025-07-10T13:35:00Z", "type": "info", "read": false, "priority": "low" },
+    { "id": "notif-3", "title": "LIQUIDITY ADDED", "message": "You have successfully added liquidity to a pool.", "timestamp": "2025-07-10T12:15:00Z", "type": "info", "read": true, "priority": "medium" },
+    { "id": "notif-4", "title": "SECURITY ALERT", "message": "A new security patch has been applied.", "timestamp": "2025-07-10T11:45:00Z", "type": "warning", "read": true, "priority": "high" }
   ],
   "widgetData": {
-    "location": "Buenos Aires, Argentina",
-    "timezone": "UTC-3",
-    "temperature": "18°C",
-    "weather": "Partly Cloudy",
+    "location": "Global",
+    "timezone": "UTC",
+    "temperature": "N/A",
+    "weather": "DeFi Mode Active",
     "date": "Wednesday, July 10th, 2025"
   }
 }
